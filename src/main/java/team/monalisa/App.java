@@ -18,28 +18,12 @@ public class App {
     public static void main(String[] args) {
         Stream<String> inputLines = null;
         try {
-            List<List<Character>> characters = splitFile(args);
-            characters.forEach(l -> System.out.println(l));
+            List<String> lines = Files.readAllLines(Paths.get(args[0]));
+            DataCenter dataCenter = new DataCenter(lines);
         } catch (IOException e) {
             System.out.println("Le fichier "+args[0]+" ne semble pas exister.");
             System.out.println("Usage : java -jar hashcode.jar file");
         }
     }
-
-    private static List<List<Character>> splitFile(String[] args) throws IOException {
-        Stream<String> inputLines;
-        List<List<Character>> characters = new ArrayList<>();
-
-        inputLines = Files.lines(Paths.get(args[0]));
-
-        inputLines.forEach(l -> {
-            List<Character> charLine = new ArrayList<>();
-            l.chars().forEach(c -> charLine.add(Character.valueOf((char) c)));
-            characters.add(charLine);
-        });
-
-        return characters;
-    }
-
 
 }
