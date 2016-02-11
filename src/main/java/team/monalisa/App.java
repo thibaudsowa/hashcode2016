@@ -12,15 +12,15 @@ import java.util.List;
 public class App {
     public static void main(String[] args) {
         try {
-            List<String> lines = Files.readAllLines(Paths.get(args[0]));
+            List<String> lines = Files.readAllLines(Paths.get("busy_day.in"));
             int cursor = 0;
             final String[] firstRow = lines.get(cursor).split(" ");
             Integer mapRow = Integer.valueOf(firstRow[0]);
-            Integer mapCol = Integer.valueOf(firstRow[0]);
-            Integer nbDrones = Integer.valueOf(firstRow[0]);
-            Integer deadLine = Integer.valueOf(firstRow[0]);
-            Integer maxLoad = Integer.valueOf(firstRow[0]);
-    
+            Integer mapCol = Integer.valueOf(firstRow[1]);
+            Integer nbDrones = Integer.valueOf(firstRow[2]);
+            Integer deadLine = Integer.valueOf(firstRow[3]);
+            Integer maxLoad = Integer.valueOf(firstRow[4]);
+            
             cursor++;
             Integer nbProduit = Integer.valueOf(lines.get(1));
             
@@ -29,6 +29,7 @@ public class App {
             final String[] productTypesWeigth = lines.get(cursor).split(" ");
             for (int i = 0; i < nbProduit; i++) {
                 ProductType productType = new ProductType();
+                productType.setId(i);
                 productType.setWeigth(Integer.valueOf(productTypesWeigth[i]));
                 productTypes.add(productType);
             }
@@ -39,15 +40,53 @@ public class App {
             cursor++;
             List<WareHouse> wareHouses = new ArrayList<>();
             for (int i = 0; i < nbWareHouse; i++) {
-                lines.get(cursor).split(" ");
+                WareHouse wareHouse = new WareHouse();
+                wareHouse.setId(i);
+                final String[] wareHouseCoordinate = lines.get(cursor).split(" ");
+                wareHouse.setRow(Integer.valueOf(wareHouseCoordinate[0]));
+                wareHouse.setCol(Integer.valueOf(wareHouseCoordinate[1]));
+                cursor++;
+                
+                final String[] productQuantity = lines.get(cursor).split(" ");
+                for (int j = 0; j < productTypes.size(); j++) {
+                    wareHouse.getInventory().put(productTypes.get(j), Integer.valueOf(productQuantity[j]));
+                }
+                wareHouses.add(wareHouse);
+                cursor++;
             }
             
-            
-            
+            Integer nbOrders = Integer.valueOf(lines.get(cursor));
+            List<Order> orders = new ArrayList<>();
+            cursor++;
+            for (int i = 0; i < nbOrders; i++) {
+                Order order = new Order();
+                order.setId(i);
+                final String[] orderCoordinate = lines.get(cursor).split(" ");
+                order.setRow(Integer.valueOf(orderCoordinate[0]));
+                order.setCol(Integer.valueOf(orderCoordinate[1]));
+                
+                cursor++;
+                Integer nbItems = Integer.valueOf(lines.get(cursor));
+                order.setNbItems(nbItems);
+                
+                cursor++;
+                final String[] typeOfItems = lines.get(cursor).split(" ");
+                for (String typeOfItem : typeOfItems) {
+                    Integer typeOfItemKey = Integer.valueOf(typeOfItem);
+                    Integer nbOfItem = 0;
+                    if (order.getItems().containsKey(productTypes.get(typeOfItemKey))){
+                        nbOfItem = order.getItems().get(productTypes.get(typeOfItemKey));   
+                    }
+                    order.getItems().put(productTypes.get(typeOfItemKey), nbOfItem+1);
+                }
+                cursor++;
+                orders.add(order);
+            }
+            System.out.println("C'est good!");
         } catch (IOException e) {
             System.out.println("Le fichier " + args[0] + " ne semble pas exister.");
             System.out.println("Usage : java -jar hashcode.jar file");
         }
     }
-
+    
 }

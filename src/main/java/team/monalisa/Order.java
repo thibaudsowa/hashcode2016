@@ -5,11 +5,12 @@ import java.util.HashMap;
 /**
  * Created by gbilley on 11/02/2016.
  */
-public class WareHouse {
+public class Order {
     Integer id;
-    HashMap<ProductType, Integer> inventory = new HashMap<>();
+    HashMap<ProductType, Integer> items = new HashMap<>();
     Integer row;
     Integer col;
+    Integer nbItems;
     
     public Integer getId() {
         return id;
@@ -19,12 +20,20 @@ public class WareHouse {
         this.id = id;
     }
     
-    public HashMap<ProductType, Integer> getInventory() {
-        return inventory;
+    public Integer getNbItems() {
+        return nbItems;
     }
     
-    public void setInventory(HashMap<ProductType, Integer> inventory) {
-        this.inventory = inventory;
+    public void setNbItems(Integer nbItems) {
+        this.nbItems = nbItems;
+    }
+    
+    public HashMap<ProductType, Integer> getItems() {
+        return items;
+    }
+    
+    public void setItems(HashMap<ProductType, Integer> items) {
+        this.items = items;
     }
     
     public Integer getRow() {
