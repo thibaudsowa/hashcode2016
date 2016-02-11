@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Hello world!
@@ -104,10 +105,16 @@ public class App {
             drones.stream().forEach(
                 drone -> {
                     drone.setBusy(true);
-                    Order bestOrder = Utils.getBestOrder(drone, orders);
+                    Order bestOrder = Utils.getBestOrders(drone, orders).get(0);
                     bestOrder.setBusy(true);
+    
+                    final Set<ProductType> orderProductTypes = bestOrder.getItems().keySet();
+                    final WareHouse optimalWareHouse = Utils.getOptimalWareHouse(bestOrder, wareHouses);
                     
-                    
+                    for (ProductType orderProductType : orderProductTypes) {
+                        if ()
+                    }
+    
                 }
 //                    List<Order> optimalOrders = Utils.getBestOrders(drone, orders);
 //                    Integer currentWeight = 0;

@@ -2,6 +2,8 @@ package team.monalisa;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by gbilley on 11/02/2016.
@@ -31,20 +33,14 @@ public class Utils {
     }
     
     public static List<Order> getBestOrders(Coordinate coordinate, List<Order> orders) {
-        orders.sort((o1, o2) -> o1.getNbItems().compareTo(o2.getNbItems()));
-        
-        return orders;
-    }
-    
-    public static void loadFromClosestWarehouse(Drone drone, List<ProductType> productTypes, Integer integer,
-                                                List<WareHouse> wareHouses) {
-        for (WareHouse wareHouse : wareHouses) {
-            if (wareHouse.contains(ProductType pro))
-        }
+        final Stream<Order> validOrder = orders.stream().filter(o -> !o.getBusy());
+        final List<Order> sortedOrders = validOrder.collect(Collectors.toList());
+        sortedOrders.sort((o1, o2) -> o1.getNbItems().compareTo(o2.getNbItems()));
+        return sortedOrders;
         
     }
     
-    public static Order getBestOrder(Drone drone, List<Order> orders) {
+    public static WareHouse getOptimalWareHouse(Order bestOrder, List<WareHouse> wareHouses) {
         
         return null;
     }
