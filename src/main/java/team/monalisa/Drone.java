@@ -18,36 +18,44 @@ public class Drone extends Coordinate {
         this.id = id;
     }
 
-    public void load(WareHouse wareHouse, ProductType productType, Integer nbItems) {
+    public Integer load(WareHouse wareHouse, ProductType productType, Integer nbItems) {
 
         Utils.removeFromInventory(wareHouse.getInventory(), productType, nbItems);
         Utils.addToInventory(inventory, productType, nbItems);
 
         String cmd = id + " L " + wareHouse.getId() + " " + productType.getId() + " " + nbItems;
         App.addToOutput(cmd);
+
+        return Utils.getDistance(this, wareHouse) + 1;
     }
     
-    public void unLoad(WareHouse wareHouse, ProductType productType, Integer nbItems) {
+    public Integer unLoad(WareHouse wareHouse, ProductType productType, Integer nbItems) {
 
         Utils.removeFromInventory(inventory, productType, nbItems);
         Utils.addToInventory(wareHouse.getInventory(), productType, nbItems);
 
         String cmd = id + " U " + wareHouse.getId() + " " + productType.getId() + " " + nbItems;
         App.addToOutput(cmd);
+
+        return Utils.getDistance(this, wareHouse) + 1;
     }
     
-    public void deliver(Order order, ProductType productType, Integer nbItems) {
+    public Integer deliver(Order order, ProductType productType, Integer nbItems) {
 
         Utils.removeFromInventory(inventory, productType, nbItems);
         Utils.removeFromInventory(order.getItems(), productType, nbItems);
 
         String cmd = id + " D " + order.getId() + " " + productType.getId() + " " + nbItems;
         App.addToOutput(cmd);
+
+        return Utils.getDistance(this, order) + 1;
     }
     
-    public void waitD(Integer nbTurn) {
+    public Integer waitD(Integer nbTurn) {
         String cmd = id + " W " + nbTurn;
         App.addToOutput(cmd);
+        
+        return nbTurn;
     }
     
 }

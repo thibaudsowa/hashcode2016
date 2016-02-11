@@ -8,8 +8,6 @@ import java.util.HashMap;
 public class Order extends Coordinate {
     Integer id;
     HashMap<ProductType, Integer> items = new HashMap<>();
-    Integer row;
-    Integer col;
     Integer nbItems;
     
     public Integer getId() {
@@ -34,21 +32,5 @@ public class Order extends Coordinate {
     
     public void setItems(HashMap<ProductType, Integer> items) {
         this.items = items;
-    }
-    
-    public Integer getRow() {
-        return row;
-    }
-    
-    public void setRow(Integer row) {
-        this.row = row;
-    }
-    
-    public Integer getCol() {
-        return col;
-    }
-    
-    public void setCol(Integer col) {
-        this.col = col;
     }
 }
