@@ -72,12 +72,12 @@ public class App {
                 cursor++;
                 final String[] typeOfItems = lines.get(cursor).split(" ");
                 for (String typeOfItem : typeOfItems) {
-                    Integer typeOfItemKey = Integer.valueOf(typeOfItem);
-                    Integer nbOfItem = 0;
-                    if (order.getItems().containsKey(productTypes.get(typeOfItemKey))){
-                        nbOfItem = order.getItems().get(productTypes.get(typeOfItemKey));   
+                    ProductType productType = productTypes.get(Integer.valueOf(typeOfItem));
+                    Integer nbOfItem = 1;
+                    if (order.getItems().containsKey(productType)){
+                        nbOfItem = order.getItems().get(productType)+1;   
                     }
-                    order.getItems().put(productTypes.get(typeOfItemKey), nbOfItem+1);
+                    order.getItems().put(productType, nbOfItem);
                 }
                 cursor++;
                 orders.add(order);
