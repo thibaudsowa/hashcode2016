@@ -5,8 +5,8 @@ import java.util.HashMap;
 /**
  * Created by thibaudsowa on 11/02/2016.
  */
-public class Drone {
-
+public class Drone extends Coordinate {
+    
     int id;
     HashMap<ProductType, Integer> inventory = new HashMap<>();
 
@@ -26,7 +26,7 @@ public class Drone {
         String cmd = id + " L " + wareHouse.getId() + " " + productType.getId() + " " + nbItems;
         App.addToOutput(cmd);
     }
-
+    
     public void unLoad(WareHouse wareHouse, ProductType productType, Integer nbItems) {
 
         Utils.removeFromInventory(inventory, productType, nbItems);
@@ -35,7 +35,7 @@ public class Drone {
         String cmd = id + " U " + wareHouse.getId() + " " + productType.getId() + " " + nbItems;
         App.addToOutput(cmd);
     }
-
+    
     public void deliver(Order order, ProductType productType, Integer nbItems) {
 
         Utils.removeFromInventory(inventory, productType, nbItems);
@@ -44,12 +44,10 @@ public class Drone {
         String cmd = id + " D " + order.getId() + " " + productType.getId() + " " + nbItems;
         App.addToOutput(cmd);
     }
-
-
+    
     public void waitD(Integer nbTurn) {
         String cmd = id + " W " + nbTurn;
         App.addToOutput(cmd);
     }
-
-
+    
 }

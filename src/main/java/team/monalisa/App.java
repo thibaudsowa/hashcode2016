@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -60,6 +61,15 @@ public class App {
                 }
                 wareHouses.add(wareHouse);
                 cursor++;
+            }
+            List<Drone> drones = new ArrayList<>();
+    
+            for (int i = 0; i < nbDrones; i++) {
+                Drone drone = new Drone();
+                drone.setId(i);
+                drone.setRow(wareHouses.get(0).getRow());
+                drone.setCol(wareHouses.get(0).getCol());
+                drone.setProducts(new HashMap<ProductType, Integer>());
             }
             
             Integer nbOrders = Integer.valueOf(lines.get(cursor));
