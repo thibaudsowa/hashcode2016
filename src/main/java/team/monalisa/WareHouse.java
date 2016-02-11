@@ -7,6 +7,8 @@ import java.util.HashMap;
  */
 public class WareHouse {
     HashMap<ProductType, Integer> inventory = new HashMap<>();
+    Integer row;
+    Integer col;
     
     public HashMap<ProductType, Integer> getInventory() {
         return inventory;
