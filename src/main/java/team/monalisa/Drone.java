@@ -1,6 +1,7 @@
 package team.monalisa;
 
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Created by thibaudsowa on 11/02/2016.
@@ -8,6 +9,7 @@ import java.util.HashMap;
 public class Drone extends Coordinate {
     
     int id;
+    boolean busy;
     HashMap<ProductType, Integer> inventory = new HashMap<>();
 
     public int getId() {
@@ -58,4 +60,22 @@ public class Drone extends Coordinate {
         return nbTurn;
     }
     
+    public HashMap<ProductType, Integer> getInventory() {
+        return inventory;
+    }
+    
+    public void setInventory(HashMap<ProductType, Integer> inventory) {
+        this.inventory = inventory;
+    }
+    
+    public Boolean isEmpty(){
+        final Set<ProductType> productTypes = inventory.keySet();
+        Boolean isEmpty = true;
+        for (ProductType productType : productTypes) {
+            if (this.inventory.get(productType)>0){
+                isEmpty=false;
+            }
+        }
+        return isEmpty;
+    }
 }

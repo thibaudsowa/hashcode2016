@@ -26,4 +26,6 @@ public class Utils {
             inventory.put(productType, inventory.get(productType) - nbItems);
         }
     }
+    
+    public Drone getFirst
 }

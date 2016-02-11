@@ -11,13 +11,13 @@ import java.util.List;
  * Hello world!
  */
 public class App {
-
+    
     static String output = "";
-
+    
     public static void addToOutput(String stringToAdd) {
         output += stringToAdd + "\n";
     }
-
+    
     public static void main(String[] args) {
         try {
             List<String> lines = Files.readAllLines(Paths.get("busy_day.in"));
@@ -63,13 +63,14 @@ public class App {
                 cursor++;
             }
             List<Drone> drones = new ArrayList<>();
-    
+            
             for (int i = 0; i < nbDrones; i++) {
                 Drone drone = new Drone();
                 drone.setId(i);
                 drone.setRow(wareHouses.get(0).getRow());
                 drone.setCol(wareHouses.get(0).getCol());
-                drone.setProducts(new HashMap<ProductType, Integer>());
+                drone.setInventory(new HashMap<>());
+                drones.add(drone);
             }
             
             Integer nbOrders = Integer.valueOf(lines.get(cursor));
@@ -91,15 +92,23 @@ public class App {
                 for (String typeOfItem : typeOfItems) {
                     ProductType productType = productTypes.get(Integer.valueOf(typeOfItem));
                     Integer nbOfItem = 1;
-                    if (order.getItems().containsKey(productType)){
-                        nbOfItem = order.getItems().get(productType)+1;   
+                    if (order.getItems().containsKey(productType)) {
+                        nbOfItem = order.getItems().get(productType) + 1;
                     }
                     order.getItems().put(productType, nbOfItem);
                 }
                 cursor++;
                 orders.add(order);
             }
-            System.out.println("C'est good!");
+            
+            orders.sort((o1,o2) -> o1.getNbItems().compareTo(o2.getNbItems()));
+                      
+            orders.stream().forEach(
+                order -> {
+                    
+                }
+            );
+            
         } catch (IOException e) {
             System.out.println("Le fichier " + args[0] + " ne semble pas exister.");
             System.out.println("Usage : java -jar hashcode.jar file");
