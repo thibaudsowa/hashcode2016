@@ -10,6 +10,13 @@ import java.util.List;
  * Hello world!
  */
 public class App {
+
+    static String output = "";
+
+    public static void addToOutput(String stringToAdd) {
+        output += stringToAdd + "\n";
+    }
+
     public static void main(String[] args) {
         try {
             List<String> lines = Files.readAllLines(Paths.get("busy_day.in"));

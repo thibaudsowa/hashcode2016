@@ -6,15 +6,15 @@ package team.monalisa;
 public class ProductType {
     Integer id;
     Integer weigth;
-    
+
     public Integer getId() {
         return id;
     }
-    
+
     public void setId(Integer id) {
         this.id = id;
     }
-    
+
     public Integer getWeigth() {
         return weigth;
     }
