@@ -5,7 +5,7 @@ import java.util.HashMap;
 /**
  * Created by gbilley on 11/02/2016.
  */
-public class Order {
+public class Order extends Coordinate {
     Integer id;
     HashMap<ProductType, Integer> items = new HashMap<>();
     Integer row;
