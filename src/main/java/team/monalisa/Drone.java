@@ -9,7 +9,7 @@ import java.util.Set;
 public class Drone extends Coordinate {
     
     int id;
-    boolean busy;
+    boolean busy = false;
     HashMap<ProductType, Integer> inventory = new HashMap<>();
 
     public int getId() {
@@ -24,6 +24,8 @@ public class Drone extends Coordinate {
 
         Utils.removeFromInventory(wareHouse.getInventory(), productType, nbItems);
         Utils.addToInventory(inventory, productType, nbItems);
+    
+        updateCoordinate(wareHouse);
 
         String cmd = id + " L " + wareHouse.getId() + " " + productType.getId() + " " + nbItems;
         App.addToOutput(cmd);
@@ -35,10 +37,16 @@ public class Drone extends Coordinate {
 
         Utils.removeFromInventory(inventory, productType, nbItems);
         Utils.addToInventory(wareHouse.getInventory(), productType, nbItems);
-
+    
+        updateCoordinate(wareHouse);
+        
         String cmd = id + " U " + wareHouse.getId() + " " + productType.getId() + " " + nbItems;
         App.addToOutput(cmd);
 
+        if (isEmpty()) {
+            busy=false;
+        }
+        
         return Utils.getDistance(this, wareHouse) + 1;
     }
     
@@ -46,11 +54,29 @@ public class Drone extends Coordinate {
 
         Utils.removeFromInventory(inventory, productType, nbItems);
         Utils.removeFromInventory(order.getItems(), productType, nbItems);
-
+    
+        updateCoordinate(order);
+        
         String cmd = id + " D " + order.getId() + " " + productType.getId() + " " + nbItems;
         App.addToOutput(cmd);
-
+    
+        if (isEmpty()) {
+            busy = false;
+        }
         return Utils.getDistance(this, order) + 1;
+    }
+    
+    public boolean isBusy() {
+        return busy;
+    }
+    
+    public void setBusy(boolean busy) {
+        this.busy = busy;
+    }
+    
+    private void updateCoordinate(Coordinate wareHouse) {
+        this.setRow(wareHouse.getRow());
+        this.setCol(wareHouse.getCol());
     }
     
     public Integer waitD(Integer nbTurn) {

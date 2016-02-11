@@ -101,14 +101,27 @@ public class App {
                 orders.add(order);
             }
             
-            orders.sort((o1,o2) -> o1.getNbItems().compareTo(o2.getNbItems()));
-                      
-            orders.stream().forEach(
-                order -> {
+            drones.stream().forEach(
+                drone -> {
+                    drone.setBusy(true);
+                    Order bestOrder = Utils.getBestOrder(drone, orders);
+                    bestOrder.setBusy(true);
+                    
                     
                 }
-            );
-            
+//                    List<Order> optimalOrders = Utils.getBestOrders(drone, orders);
+//                    Integer currentWeight = 0;
+//                    for (Order order : optimalOrders) {
+//                        if (currentWeight + order.getWeight() <= maxLoad){
+//                            final Set<ProductType> orderProductTypes = order.getItems().keySet();
+//                            for (ProductType orderProductType : orderProductTypes) {
+//                                Utils.loadFromClosestWarehouse(drone, productTypes, order.getItems().get(productTypes), wareHouses);
+//                            }
+//                        }
+//                    }
+//                }
+            );          
+                        
         } catch (IOException e) {
             System.out.println("Le fichier " + args[0] + " ne semble pas exister.");
             System.out.println("Usage : java -jar hashcode.jar file");
