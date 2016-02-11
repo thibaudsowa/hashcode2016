@@ -21,7 +21,7 @@ public class App {
     
     public static void main(String[] args) {
         try {
-            List<String> lines = Files.readAllLines(Paths.get("busy_day.in"));
+            List<String> lines = Files.readAllLines(Paths.get("redundancy.in"));
             int cursor = 0;
             final String[] firstRow = lines.get(cursor).split(" ");
             Integer mapRow = Integer.valueOf(firstRow[0]);
@@ -102,35 +102,34 @@ public class App {
                 orders.add(order);
             }
             
-            drones.stream().forEach(
-                drone -> {
+            final Compteur compteur = new Compteur();
+            while (compteur.getNbTours() < deadLine) {
+                for (Drone drone : drones) {
                     drone.setBusy(true);
                     Order bestOrder = Utils.getBestOrders(drone, orders).get(0);
                     bestOrder.setBusy(true);
-    
+                    
                     final Set<ProductType> orderProductTypes = bestOrder.getItems().keySet();
                     final WareHouse optimalWareHouse = Utils.getOptimalWareHouse(bestOrder, wareHouses);
-                    
-                    for (ProductType orderProductType : orderProductTypes) {
-                        if ()
+                    if (optimalWareHouse != null) {
+                        for (ProductType orderProductType : orderProductTypes) {
+                            compteur.add(
+                                drone.load(optimalWareHouse, orderProductType,
+                                           bestOrder.getItems().get(orderProductType)));
+                        }
+                        for (ProductType orderProductType : orderProductTypes) {
+                            compteur.add(
+                                drone.deliver(bestOrder, orderProductType, bestOrder.getItems().get(orderProductType)));
+                        }
                     }
-    
                 }
-//                    List<Order> optimalOrders = Utils.getBestOrders(drone, orders);
-//                    Integer currentWeight = 0;
-//                    for (Order order : optimalOrders) {
-//                        if (currentWeight + order.getWeight() <= maxLoad){
-//                            final Set<ProductType> orderProductTypes = order.getItems().keySet();
-//                            for (ProductType orderProductType : orderProductTypes) {
-//                                Utils.loadFromClosestWarehouse(drone, productTypes, order.getItems().get(productTypes), wareHouses);
-//                            }
-//                        }
-//                    }
-//                }
-            );          
-                        
+            }
+            output = compteur.getNbAction() + "\n" + output;
+            System.out.println(output);
+            Files.write(Paths.get("result.out"), output.getBytes());
+            
         } catch (IOException e) {
-            System.out.println("Le fichier " + args[0] + " ne semble pas exister.");
+            //            System.out.println("Le fichier " + args[0] + " ne semble pas exister.");
             System.out.println("Usage : java -jar hashcode.jar file");
         }
     }

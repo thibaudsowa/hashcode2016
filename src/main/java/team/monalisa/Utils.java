@@ -41,7 +41,11 @@ public class Utils {
     }
     
     public static WareHouse getOptimalWareHouse(Order bestOrder, List<WareHouse> wareHouses) {
-        
+        for (WareHouse wareHouse : wareHouses) {
+            if (wareHouse.containsAll(bestOrder)){
+                return wareHouse;
+            }
+        }
         return null;
     }
 }
