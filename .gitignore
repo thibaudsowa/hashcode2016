@@ -6,3 +6,6 @@ pom.xml.next
 release.properties
 *.iml
 .idea/
+busy_day.out
+mother_of_all_warehouses.out
+redundancy.out

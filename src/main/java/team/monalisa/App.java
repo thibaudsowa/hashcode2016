@@ -12,19 +12,23 @@ import java.util.Set;
  * Hello world!
  */
 public class App {
-    
+
+    public static Integer deadLine = 0;
     static String output = "";
-    
+
     public static void addToOutput(String stringToAdd) {
         output += stringToAdd + "\n";
     }
 
-    public static Integer deadLine = 0;
-
-
     public static void main(String[] args) {
+        process("redundancy");
+        process("busy_day");
+        process("mother_of_all_warehouses");
+    }
+
+    public static void process(String fileName) {
         try {
-            List<String> lines = Files.readAllLines(Paths.get("redundancy.in"));
+            List<String> lines = Files.readAllLines(Paths.get(fileName + ".in"));
             int cursor = 0;
             final String[] firstRow = lines.get(cursor).split(" ");
             Integer mapRow = Integer.valueOf(firstRow[0]);
@@ -32,10 +36,10 @@ public class App {
             Integer nbDrones = Integer.valueOf(firstRow[2]);
             deadLine = Integer.valueOf(firstRow[3]);
             Integer maxLoad = Integer.valueOf(firstRow[4]);
-            
+
             cursor++;
             Integer nbProduit = Integer.valueOf(lines.get(1));
-            
+
             cursor++;
             List<ProductType> productTypes = new ArrayList<>();
             final String[] productTypesWeigth = lines.get(cursor).split(" ");
@@ -45,10 +49,10 @@ public class App {
                 productType.setWeigth(Integer.valueOf(productTypesWeigth[i]));
                 productTypes.add(productType);
             }
-            
+
             cursor++;
             Integer nbWareHouse = Integer.valueOf(lines.get(cursor));
-            
+
             cursor++;
             List<WareHouse> wareHouses = new ArrayList<>();
             for (int i = 0; i < nbWareHouse; i++) {
@@ -58,7 +62,7 @@ public class App {
                 wareHouse.setRow(Integer.valueOf(wareHouseCoordinate[0]));
                 wareHouse.setCol(Integer.valueOf(wareHouseCoordinate[1]));
                 cursor++;
-                
+
                 final String[] productQuantity = lines.get(cursor).split(" ");
                 for (int j = 0; j < productTypes.size(); j++) {
                     wareHouse.getInventory().put(productTypes.get(j), Integer.valueOf(productQuantity[j]));
@@ -68,7 +72,7 @@ public class App {
                 cursor++;
             }
             List<Drone> drones = new ArrayList<>();
-            
+
             for (int i = 0; i < nbDrones; i++) {
                 Drone drone = new Drone();
                 drone.setId(i);
@@ -77,7 +81,7 @@ public class App {
                 drone.setInventory(new HashMap<>());
                 drones.add(drone);
             }
-            
+
             Integer nbOrders = Integer.valueOf(lines.get(cursor));
             List<Order> orders = new ArrayList<>();
             cursor++;
@@ -87,11 +91,11 @@ public class App {
                 final String[] orderCoordinate = lines.get(cursor).split(" ");
                 order.setRow(Integer.valueOf(orderCoordinate[0]));
                 order.setCol(Integer.valueOf(orderCoordinate[1]));
-                
+
                 cursor++;
                 Integer nbItems = Integer.valueOf(lines.get(cursor));
                 order.setNbItems(nbItems);
-                
+
                 cursor++;
                 final String[] typeOfItems = lines.get(cursor).split(" ");
                 for (String typeOfItem : typeOfItems) {
@@ -105,24 +109,24 @@ public class App {
                 cursor++;
                 orders.add(order);
             }
-            
+
             final Compteur compteur = new Compteur();
             int finished = 0;
             boolean noMoreOrder = false;
             while (finished < nbDrones && !noMoreOrder) {
                 finished = 0;
                 for (Drone drone : drones) {
-                    if(Utils.getBestOrders(drone, orders).isEmpty()) {
+                    if (Utils.getBestOrders(drone, orders).isEmpty()) {
                         noMoreOrder = true;
                         break;
                     }
-                    if(!drone.isFinish()) {
+                    if (!drone.isFinish()) {
                         drone.setBusy(true);
                         Order bestOrder = Utils.getBestOrders(drone, orders).get(0);
                         bestOrder.setBusy(true);
 
                         final Set<ProductType> orderProductTypes = bestOrder.getItems().keySet();
-                        final WareHouse optimalWareHouse = Utils.getOptimalWareHouse(bestOrder, wareHouses);
+                        final WareHouse optimalWareHouse = Utils.getOptimalWareHouse(drone, bestOrder, wareHouses);
                         if (optimalWareHouse != null) {
                             for (ProductType orderProductType : orderProductTypes) {
                                 compteur.add(
@@ -141,12 +145,15 @@ public class App {
             }
             output = compteur.getNbAction() + "\n" + output;
             System.out.println(output);
-            Files.write(Paths.get("result.out"), output.getBytes());
-            
+            Files.write(Paths.get(fileName + ".out"), output.getBytes());
+
+            //RAZ
+            output = "";
+
         } catch (IOException e) {
             //            System.out.println("Le fichier " + args[0] + " ne semble pas exister.");
             System.out.println("Usage : java -jar hashcode.jar file");
         }
     }
-    
+
 }
