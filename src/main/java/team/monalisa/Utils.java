@@ -33,7 +33,7 @@ public class Utils {
     }
 
     public static List<Order> getBestOrders(Coordinate coordinate, List<Order> orders) {
-        final Stream<Order> validOrder = orders.stream().filter(o -> !o.getBusy());
+        final Stream<Order> validOrder = orders.stream().filter(o -> !o.getFinished());
         final List<Order> sortedOrders = validOrder.collect(Collectors.toList());
         sortedOrders.sort((o1, o2) -> o1.getNbItems().compareTo(o2.getNbItems()));
         return sortedOrders;

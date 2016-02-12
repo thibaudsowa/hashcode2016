@@ -10,7 +10,7 @@ public class Order extends Coordinate {
     Integer id;
     HashMap<ProductType, Integer> items = new HashMap<>();
     Integer nbItems;
-    Boolean busy=false;
+    Boolean finished =false;
     
     public Integer getId() {
         return id;
@@ -45,11 +45,11 @@ public class Order extends Coordinate {
         return weight;   
     }
     
-    public Boolean getBusy() {
-        return busy;
+    public Boolean getFinished() {
+        return finished;
     }
     
-    public void setBusy(Boolean busy) {
-        this.busy = busy;
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
     }
 }

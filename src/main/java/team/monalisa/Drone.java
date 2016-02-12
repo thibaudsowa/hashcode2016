@@ -28,7 +28,7 @@ public class Drone extends Coordinate {
     public Integer load(WareHouse wareHouse, ProductType productType, Integer nbItems, Integer maxLoad) {
 
 
-        if (getWeight() + productType.getWeigth()*nbItems >= maxLoad){
+        if (getWeight() + productType.getWeigth()*nbItems >= maxLoad || nbItems <= 0){
             return 0;
         }
         Utils.removeFromInventory(wareHouse.getInventory(), productType, nbItems);
@@ -47,7 +47,7 @@ public class Drone extends Coordinate {
     
     public Integer unLoad(WareHouse wareHouse, ProductType productType, Integer nbItems) {
 
-        if (inventory.get(productType) < nbItems){
+        if (inventory.get(productType) < nbItems || nbItems <= 0){
             return 0;
         }
 
@@ -72,12 +72,21 @@ public class Drone extends Coordinate {
     
     public Integer deliver(Order order, ProductType productType, Integer nbItems) {
 
-        if (!inventory.containsKey(productType) || inventory.get(productType) < nbItems){
+        if (!inventory.containsKey(productType) || inventory.get(productType) < nbItems || nbItems <= 0){
             return 0;
         }
 
         Utils.removeFromInventory(inventory, productType, nbItems);
         Utils.removeFromInventory(order.getItems(), productType, nbItems);
+
+        boolean orderFinished = true;
+        for (ProductType typeFromOrder : order.getItems().keySet()) {
+            if(order.getItems().get(typeFromOrder) > 0) {
+                orderFinished = false;
+                break;
+            }
+        }
+        order.setFinished(orderFinished);
     
         updateCoordinate(order);
         

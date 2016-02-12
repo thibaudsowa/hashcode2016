@@ -123,7 +123,7 @@ public class App {
                     if (!drone.isFinish()) {
                         drone.setBusy(true);
                         Order bestOrder = Utils.getBestOrders(drone, orders).get(0);
-                        bestOrder.setBusy(true);
+                        bestOrder.setFinished(true);
 
                         final Set<ProductType> orderProductTypes = bestOrder.getItems().keySet();
                         final WareHouse optimalWareHouse = Utils.getOptimalWareHouse(drone, bestOrder, wareHouses);
