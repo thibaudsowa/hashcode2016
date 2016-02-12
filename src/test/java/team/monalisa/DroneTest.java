@@ -1,10 +1,10 @@
 package team.monalisa;
 
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
 
 /**
  * Created by thibaudsowa on 11/02/2016.
@@ -26,7 +26,7 @@ public class DroneTest {
         wareHouse.setId(25);
 
         drone.deliver(order, productType, 15);
-        drone.load(wareHouse, productType, 125);
+        drone.load(wareHouse, productType, 125, 320);
 
         Drone drone2 = new Drone();
         drone2.setId(2);

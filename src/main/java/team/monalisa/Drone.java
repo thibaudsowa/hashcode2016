@@ -20,8 +20,10 @@ public class Drone extends Coordinate {
         this.id = id;
     }
 
-    public Integer load(WareHouse wareHouse, ProductType productType, Integer nbItems) {
-
+    public Integer load(WareHouse wareHouse, ProductType productType, Integer nbItems, Integer maxLoad) {
+        if (getWeight() + productType.getWeigth()*nbItems >= maxLoad){
+            return Utils.getDistance(this, wareHouse);
+        }
         Utils.removeFromInventory(wareHouse.getInventory(), productType, nbItems);
         Utils.addToInventory(inventory, productType, nbItems);
     
@@ -103,5 +105,14 @@ public class Drone extends Coordinate {
             }
         }
         return isEmpty;
+    }
+    
+    public Integer getWeight() {
+        Integer weight = 0;
+        final Set<ProductType> productTypes = inventory.keySet();
+        for (ProductType productType : productTypes) {
+            weight += productType.getWeigth() * inventory.get(productType);
+        }
+        return weight;
     }
 }

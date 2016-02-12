@@ -103,24 +103,22 @@ public class App {
             }
             
             final Compteur compteur = new Compteur();
-            while (compteur.getNbTours() < deadLine) {
-                for (Drone drone : drones) {
-                    drone.setBusy(true);
-                    Order bestOrder = Utils.getBestOrders(drone, orders).get(0);
-                    bestOrder.setBusy(true);
-                    
-                    final Set<ProductType> orderProductTypes = bestOrder.getItems().keySet();
-                    final WareHouse optimalWareHouse = Utils.getOptimalWareHouse(bestOrder, wareHouses);
-                    if (optimalWareHouse != null) {
-                        for (ProductType orderProductType : orderProductTypes) {
-                            compteur.add(
-                                drone.load(optimalWareHouse, orderProductType,
-                                           bestOrder.getItems().get(orderProductType)));
-                        }
-                        for (ProductType orderProductType : orderProductTypes) {
-                            compteur.add(
-                                drone.deliver(bestOrder, orderProductType, bestOrder.getItems().get(orderProductType)));
-                        }
+            for (Drone drone : drones) {
+                drone.setBusy(true);
+                Order bestOrder = Utils.getBestOrders(drone, orders).get(0);
+                bestOrder.setBusy(true);
+                
+                final Set<ProductType> orderProductTypes = bestOrder.getItems().keySet();
+                final WareHouse optimalWareHouse = Utils.getOptimalWareHouse(bestOrder, wareHouses);
+                if (optimalWareHouse != null) {
+                    for (ProductType orderProductType : orderProductTypes) {
+                        compteur.add(
+                            drone.load(optimalWareHouse, orderProductType,
+                                       bestOrder.getItems().get(orderProductType), maxLoad));
+                    }
+                    for (ProductType orderProductType : orderProductTypes) {
+                        compteur.add(
+                            drone.deliver(bestOrder, orderProductType, bestOrder.getItems().get(orderProductType)));
                     }
                 }
             }
