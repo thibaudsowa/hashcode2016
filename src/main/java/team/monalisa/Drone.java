@@ -11,6 +11,7 @@ public class Drone extends Coordinate {
     int id;
     boolean busy = false;
     HashMap<ProductType, Integer> inventory = new HashMap<>();
+    int tTotal = 0;
 
     public int getId() {
         return id;
@@ -20,22 +21,35 @@ public class Drone extends Coordinate {
         this.id = id;
     }
 
+    public Boolean isFinish() {
+        return tTotal >= App.deadLine;
+    }
+
     public Integer load(WareHouse wareHouse, ProductType productType, Integer nbItems, Integer maxLoad) {
+
+
         if (getWeight() + productType.getWeigth()*nbItems >= maxLoad){
-            return Utils.getDistance(this, wareHouse);
+            return 0;
         }
         Utils.removeFromInventory(wareHouse.getInventory(), productType, nbItems);
         Utils.addToInventory(inventory, productType, nbItems);
-    
+
         updateCoordinate(wareHouse);
 
         String cmd = id + " L " + wareHouse.getId() + " " + productType.getId() + " " + nbItems;
         App.addToOutput(cmd);
 
-        return Utils.getDistance(this, wareHouse) + 1;
+        int t = Utils.getDistance(this, wareHouse) + 1;
+        tTotal += t;
+
+        return t;
     }
     
     public Integer unLoad(WareHouse wareHouse, ProductType productType, Integer nbItems) {
+
+        if (inventory.get(productType) < nbItems){
+            return 0;
+        }
 
         Utils.removeFromInventory(inventory, productType, nbItems);
         Utils.addToInventory(wareHouse.getInventory(), productType, nbItems);
@@ -48,11 +62,19 @@ public class Drone extends Coordinate {
         if (isEmpty()) {
             busy=false;
         }
-        
-        return Utils.getDistance(this, wareHouse) + 1;
+
+
+        int t = Utils.getDistance(this, wareHouse) + 1;
+        tTotal += t;
+
+        return t;
     }
     
     public Integer deliver(Order order, ProductType productType, Integer nbItems) {
+
+        if (!inventory.containsKey(productType) || inventory.get(productType) < nbItems){
+            return 0;
+        }
 
         Utils.removeFromInventory(inventory, productType, nbItems);
         Utils.removeFromInventory(order.getItems(), productType, nbItems);
@@ -65,7 +87,11 @@ public class Drone extends Coordinate {
         if (isEmpty()) {
             busy = false;
         }
-        return Utils.getDistance(this, order) + 1;
+
+        int t = Utils.getDistance(this, order) + 1;
+        tTotal += t;
+
+        return t;
     }
     
     public boolean isBusy() {
@@ -84,7 +110,9 @@ public class Drone extends Coordinate {
     public Integer waitD(Integer nbTurn) {
         String cmd = id + " W " + nbTurn;
         App.addToOutput(cmd);
-        
+
+        tTotal += nbTurn;
+
         return nbTurn;
     }
     
@@ -106,7 +134,7 @@ public class Drone extends Coordinate {
         }
         return isEmpty;
     }
-    
+
     public Integer getWeight() {
         Integer weight = 0;
         final Set<ProductType> productTypes = inventory.keySet();

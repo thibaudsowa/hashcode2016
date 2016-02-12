@@ -25,6 +25,8 @@ public class Compteur {
     
     public void add(Integer tours) {
         nbTours+=tours;
-        nbAction++;
+        if(tours > 0) {
+            nbAction++;
+        }
     }
 }

@@ -18,7 +18,10 @@ public class App {
     public static void addToOutput(String stringToAdd) {
         output += stringToAdd + "\n";
     }
-    
+
+    public static Integer deadLine = 0;
+
+
     public static void main(String[] args) {
         try {
             List<String> lines = Files.readAllLines(Paths.get("redundancy.in"));
@@ -27,7 +30,7 @@ public class App {
             Integer mapRow = Integer.valueOf(firstRow[0]);
             Integer mapCol = Integer.valueOf(firstRow[1]);
             Integer nbDrones = Integer.valueOf(firstRow[2]);
-            Integer deadLine = Integer.valueOf(firstRow[3]);
+            deadLine = Integer.valueOf(firstRow[3]);
             Integer maxLoad = Integer.valueOf(firstRow[4]);
             
             cursor++;
@@ -59,6 +62,7 @@ public class App {
                 final String[] productQuantity = lines.get(cursor).split(" ");
                 for (int j = 0; j < productTypes.size(); j++) {
                     wareHouse.getInventory().put(productTypes.get(j), Integer.valueOf(productQuantity[j]));
+                    wareHouse.getPrevisionalInventory().put(productTypes.get(j), Integer.valueOf(productQuantity[j]));
                 }
                 wareHouses.add(wareHouse);
                 cursor++;
@@ -103,22 +107,35 @@ public class App {
             }
             
             final Compteur compteur = new Compteur();
-            for (Drone drone : drones) {
-                drone.setBusy(true);
-                Order bestOrder = Utils.getBestOrders(drone, orders).get(0);
-                bestOrder.setBusy(true);
-                
-                final Set<ProductType> orderProductTypes = bestOrder.getItems().keySet();
-                final WareHouse optimalWareHouse = Utils.getOptimalWareHouse(bestOrder, wareHouses);
-                if (optimalWareHouse != null) {
-                    for (ProductType orderProductType : orderProductTypes) {
-                        compteur.add(
-                            drone.load(optimalWareHouse, orderProductType,
-                                       bestOrder.getItems().get(orderProductType), maxLoad));
+            int finished = 0;
+            boolean noMoreOrder = false;
+            while (finished < nbDrones && !noMoreOrder) {
+                finished = 0;
+                for (Drone drone : drones) {
+                    if(Utils.getBestOrders(drone, orders).isEmpty()) {
+                        noMoreOrder = true;
+                        break;
                     }
-                    for (ProductType orderProductType : orderProductTypes) {
-                        compteur.add(
-                            drone.deliver(bestOrder, orderProductType, bestOrder.getItems().get(orderProductType)));
+                    if(!drone.isFinish()) {
+                        drone.setBusy(true);
+                        Order bestOrder = Utils.getBestOrders(drone, orders).get(0);
+                        bestOrder.setBusy(true);
+
+                        final Set<ProductType> orderProductTypes = bestOrder.getItems().keySet();
+                        final WareHouse optimalWareHouse = Utils.getOptimalWareHouse(bestOrder, wareHouses);
+                        if (optimalWareHouse != null) {
+                            for (ProductType orderProductType : orderProductTypes) {
+                                compteur.add(
+                                        drone.load(optimalWareHouse, orderProductType,
+                                                bestOrder.getItems().get(orderProductType), maxLoad));
+                            }
+                            for (ProductType orderProductType : orderProductTypes) {
+                                compteur.add(
+                                        drone.deliver(bestOrder, orderProductType, bestOrder.getItems().get(orderProductType)));
+                            }
+                        }
+                    } else {
+                        finished++;
                     }
                 }
             }

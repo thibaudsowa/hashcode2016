@@ -9,6 +9,7 @@ import java.util.Set;
 public class WareHouse extends Coordinate {
     Integer id;
     HashMap<ProductType, Integer> inventory = new HashMap<>();
+    HashMap<ProductType, Integer> previsionalInventory = new HashMap<>();
     
     public Integer getId() {
         return id;
@@ -24,6 +25,14 @@ public class WareHouse extends Coordinate {
     
     public void setInventory(HashMap<ProductType, Integer> inventory) {
         this.inventory = inventory;
+    }
+
+    public HashMap<ProductType, Integer> getPrevisionalInventory() {
+        return previsionalInventory;
+    }
+
+    public void setPrevisionalInventory(HashMap<ProductType, Integer> previsionalInventory) {
+        this.previsionalInventory = previsionalInventory;
     }
     
     public Boolean containsAll(Order bestOrder) {
