@@ -148,6 +148,7 @@ public class App {
             Files.write(Paths.get(fileName + ".out"), output.getBytes());
 
             //RAZ
+            
             output = "";
 
         } catch (IOException e) {
